@@ -1,6 +1,33 @@
 # Запуск лабораторной в GitHub Codespaces
 
-В репозитории должны лежать файлы этой папки в корне, включая `.devcontainer`. Node.js 24 и Docker настраиваются контейнером разработки. MongoDB запускается через исходный compose.yaml. Cloudflare для этого варианта не нужен.
+В репозитории должны лежать файлы этой папки в корне, включая `.devcontainer`. Node.js 24 и Docker настраиваются контейнером разработки. MongoDB запускается через исходный compose.yaml. 
+
+Краткая инструкция по запуску:
+
+Открыть Codespace https://upgraded-space-capybara-rvwqqv75vxr35r94.github.dev/
+
+1. Выполнить команду
+
+```bash
+cd /workspaces/lti-lab
+docker compose up -d mongo
+npm start
+```
+
+2. Порт 3000 сделать публичным
+
+3. Проверить состояние сервера 
+
+https://upgraded-space-capybara-rvwqqv75vxr35r94-3000.app.github.dev/healthz
+
+Ожидается вывод:
+
+```json
+{"ok":true,"configured":true}
+```
+
+
+Полная инструкция:
 
 1. На странице репозитория: Code → Codespaces → Create codespace on main (или на ветке, содержащей этот проект).
 2. Дождаться выполнения команд создания окружения: `npm ci` и создания локального `.env`. При старте Codespace запускается `docker compose up -d mongo`.
