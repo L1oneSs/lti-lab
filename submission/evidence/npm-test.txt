@@ -1,0 +1,20 @@
+
+> moodle-lti-three-tasks-lab@1.0.0 test
+> node --test test/*.test.mjs
+
+✔ normalization and zero score (1.2753ms)
+✔ maximum and partial result (0.193ms)
+✔ invalid answers cannot become grades (0.8955ms)
+✔ HTML answers: case and surrounding whitespace do not affect the grade (0.1206ms)
+✔ HTML answers: brackets and attributes are not tag names (0.1123ms)
+✔ HTML answers: an unordered list is not an ordered list (1.3638ms)
+AGS не подтвердил оценку: HttpError
+✔ signed LTI launch, AGS, isolation, replay and failure recovery (357.4093ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1398.0294
