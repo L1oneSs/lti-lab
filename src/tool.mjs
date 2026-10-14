@@ -22,6 +22,15 @@ export function createTool(config, databaseManager) {
   const tickets = new Map();
   const sessions = new Map();
   const origin = new URL(config.publicUrl).origin;
+  const trustedOrigins = new Set([origin]);
+  if (config.trustedProxyOrigin) {
+    const proxyOrigin = new URL(config.trustedProxyOrigin);
+    if (!['http:', 'https:'].includes(proxyOrigin.protocol) || proxyOrigin.username || proxyOrigin.password ||
+        proxyOrigin.pathname !== '/' || proxyOrigin.search || proxyOrigin.hash) {
+      throw new Error('TRUSTED_PROXY_ORIGIN должен содержать только HTTP(S) origin: протокол, хост и порт.');
+    }
+    trustedOrigins.add(proxyOrigin.origin);
+  }
   app.disable('x-powered-by');
   app.set('trust proxy', 'loopback');
   app.use('/app', (_req, res, next) => {
@@ -93,8 +102,8 @@ export function createTool(config, databaseManager) {
       if (identityKey(token) !== session.key) throw fail(403, 'Контекст запуска изменился.');
       if (req.method === 'POST') {
         if (!token.user.roles.includes(LEARNER)) throw fail(403, 'Оценку отправляет только роль Learner.');
-        if (req.get('origin') !== origin) {
-          console.warn('Отклонен Origin:', req.get('origin') ?? '(отсутствует)', '; ожидается:', origin);
+        if (!trustedOrigins.has(req.get('origin'))) {
+          console.warn('Отклонен Origin:', req.get('origin') ?? '(отсутствует)', '; ожидается:', [...trustedOrigins].join(', '));
           throw fail(403, 'Адрес страницы не совпадает с PUBLIC_URL работающего сервера. Проверьте .env и перезапустите приложение.');
         }
         if (req.get('x-csrf-token') !== session.csrf) {

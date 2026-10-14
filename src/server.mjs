@@ -3,6 +3,7 @@ import { createTool, registerMoodle } from './tool.mjs';
 
 const config = {
   port: Number(process.env.PORT ?? 3000), publicUrl: process.env.PUBLIC_URL,
+  trustedProxyOrigin: process.env.TRUSTED_PROXY_ORIGIN,
   label: process.env.APP_LABEL ?? 'Тренажер: три задания',
   mongoUrl: process.env.MONGO_URL, dataDir: resolve(process.env.DATA_DIR ?? './data'),
   issuer: process.env.MOODLE_ISSUER, clientId: process.env.MOODLE_CLIENT_ID,
