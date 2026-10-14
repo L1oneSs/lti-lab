@@ -93,7 +93,13 @@ export function createTool(config, databaseManager) {
       if (identityKey(token) !== session.key) throw fail(403, 'Контекст запуска изменился.');
       if (req.method === 'POST') {
         if (!token.user.roles.includes(LEARNER)) throw fail(403, 'Оценку отправляет только роль Learner.');
-        if (req.get('origin') !== origin || req.get('x-csrf-token') !== session.csrf) throw fail(403, 'Неверный источник запроса или CSRF-токен.');
+        if (req.get('origin') !== origin) {
+          console.warn('Отклонен Origin:', req.get('origin') ?? '(отсутствует)', '; ожидается:', origin);
+          throw fail(403, 'Адрес страницы не совпадает с PUBLIC_URL работающего сервера. Проверьте .env и перезапустите приложение.');
+        }
+        if (req.get('x-csrf-token') !== session.csrf) {
+          throw fail(403, 'Сессия страницы изменилась. Закройте другие вкладки тренажера и обновите эту страницу.');
+        }
       }
       req.lab = { session, context, token };
       next();
